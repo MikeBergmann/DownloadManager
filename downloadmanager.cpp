@@ -28,6 +28,7 @@
 #include <QNetworkRequest>
 #include <QTimer>
 #include <QAuthenticator>
+#include <QDataStream>
 
 #define HEADRETRYCNT 5
 #define RETRYCNT 50

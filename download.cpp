@@ -24,6 +24,8 @@
 #include <QTimer>
 #include <QDebug>
 #include <QFile>
+#include <QDataStream>
+#include <QTime>
 
 DownloadBase::DownloadBase(QObject *parent)
   : QObject(parent)
