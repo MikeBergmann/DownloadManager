@@ -201,11 +201,16 @@ bool Download::checkRelocation()
 void Download::relocate()
 {
   // We got a new location of the file, recreate request
- QUrl url = m_request->url().scheme()+"://"+m_request->url().host()+"/"+m_newLocation;
- delete m_request;
+  QUrl url;
+  if(QUrl(m_newLocation).isRelative()) {
+    url = m_request->url().scheme()+"://"+m_request->url().host()+(m_request->url().port()>-1 ? ":"+QString().number(m_request->url().port()) : "")+"/"+m_newLocation;
+  } else {
+    url = m_newLocation;
+  }
+  delete m_request;
 
- m_request = new QNetworkRequest();
- m_request->setUrl(url);
+  m_request = new QNetworkRequest();
+  m_request->setUrl(url);
 }
 
 void Download::timeoutTimerStart()

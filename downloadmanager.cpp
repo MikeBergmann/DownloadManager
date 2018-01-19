@@ -58,6 +58,9 @@ DownloadManager::~DownloadManager(void)
 
 void DownloadManager::downloadRequest(Download *dl)
 {
+
+  emit printText(QString("downloadRequest: %1").arg(dl->m_request->url().toString()));
+
   // Request to obtain the network headers
   dl->m_reply = m_manager->head(*(dl->m_request));
   connect(dl->m_reply, SIGNAL(finished()), this, SLOT(gotHeader()));
@@ -159,6 +162,8 @@ void DownloadManager::gotHeader(void)
     dynamic_cast<DownloadBase*>(dl)->parseHeader();
     if(dl->error()) {
       switch(dl->error()) {
+      case QNetworkReply::AuthenticationRequiredError:
+        break; // We should get signal authenticationRequired
       case QNetworkReply::ProtocolInvalidOperationError:
         emit printText(QString("gotHeader ProtocolInvalidOperationError %1").arg(dl->error()));
         emit failed(dl) ;
@@ -272,6 +277,9 @@ void DownloadManager::gotError(QNetworkReply::NetworkError errorcode)
 void DownloadManager::authenticationRequired(QNetworkReply */*reply*/, QAuthenticator *auth)
 {
   // If we try to download from a site with authentication required we will fill the credentials here.
+
+  emit printText(QString("authenticationRequired"));
+
   auth->setUser("");
   auth->setPassword("");
 }
